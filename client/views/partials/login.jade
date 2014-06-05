@@ -42,3 +42,8 @@ p ... or use one of them fancy social logins:
     a.btn.btn-default(href="", data-ng-click="loginOauth('linkedin')")
         i.fa.fa-linkedin
         |  LinkedIn
+        
+div.pull-right(ng-app='directive.g+signin')
+    google-plus-signin(clientid='GOOGLE_CLIENT_ID')
+      p ^ This is a Google Plus sign-in button
+      

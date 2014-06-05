@@ -19,7 +19,7 @@ angular.module('angular-client-side-auth')
 
 angular.module('angular-client-side-auth')
 .controller('LoginCtrl',
-['$rootScope', '$scope', '$location', '$window', 'Auth', function($rootScope, $scope, $location, $window, Auth) {
+['$rootScope', '$scope', '$location', '$http', '$window', 'Auth', function($rootScope, $scope, $location, $http, $window, Auth) {
 
     $scope.rememberme = true;
     $scope.login = function() {
@@ -39,6 +39,21 @@ angular.module('angular-client-side-auth')
     $scope.loginOauth = function(provider) {
         $window.location.href = '/auth/' + provider;
     };
+
+
+    // Google Plus Sign-in specific listeners
+    $scope.$on('event:google-plus-signin-success', function (event,authResult) {
+
+        // Send login to server or save into cookie
+        $http.post('http://localhost:8000/oauth2callback', { id_token: authResult.idtoken, access_token: authResult.access_token })
+            .success(function () { $location.path('/'); });
+    });
+
+    $scope.$on('event:google-plus-signin-failure', function (event,authResult) {
+        // Auth failure or signout detected
+        $location.path('/login');
+    });
+
 }]);
 
 angular.module('angular-client-side-auth')

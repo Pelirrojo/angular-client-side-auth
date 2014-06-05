@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angular-client-side-auth', ['ngCookies', 'ui.router'])
+angular.module('angular-client-side-auth', ['ngCookies', 'ui.router','directive.g+signin'])
 
     .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
@@ -142,7 +142,7 @@ angular.module('angular-client-side-auth', ['ngCookies', 'ui.router'])
         if (!Auth.authorize(toState.data.access)) {
             $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
             event.preventDefault();
-            
+
             if(fromState.url === '^') {
                 if(Auth.isLoggedIn()) {
                     $state.go('user.home');
