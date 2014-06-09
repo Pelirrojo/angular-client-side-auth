@@ -60,6 +60,21 @@ var routes = [
         })]
     },
     {
+        path: '/oauth2callback',
+        httpMethod: 'POST',
+        middleware: [function (req, res, next) {
+            passport.authenticate('google',function(err, user) {
+
+                if(err)     { return next(err); }
+                if(!user)   { return res.send(400); }
+
+                req.logIn(user, function(err) {
+                    res.json(200, { "role": user.role, "username": user.username });
+                });
+
+          })(req,res, next);}]
+    },
+    {
         path: '/auth/linkedin',
         httpMethod: 'GET',
         middleware: [passport.authenticate('linkedin')]

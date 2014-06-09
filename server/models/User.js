@@ -5,6 +5,7 @@ var User
     , TwitterStrategy = require('passport-twitter').Strategy
     , FacebookStrategy = require('passport-facebook').Strategy
     , GoogleStrategy = require('passport-google').Strategy
+    , GooglePlusStrategy = require('passport-google-plus')
     , LinkedInStrategy = require('passport-linkedin').Strategy
     , check =           require('validator').check
     , userRoles =       require('../../client/js/routingConfig').userRoles;
@@ -147,6 +148,21 @@ module.exports = {
         });
     },
 
+
+    googlePlusStrategy: function() {
+        if(!process.env.GOOGLE_PLUS_CLIENT_ID)     throw new Error('A Google Plus Client ID is required if you want to enable login via Google Plus.');
+        if(!process.env.GOOGLE_PLUS_CLIENT_SECRET) throw new Error('A Google Plus Client Secret is required if you want to enable login via Google Plus.');
+
+        return new GooglePlusStrategy({
+            clientId: process.env.GOOGLE_PLUS_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_PLUS_CLIENT_SECRET
+        },
+        function(identifier, profile, done) {
+            var user = module.exports.findOrCreateOauthUser('google', identifier);
+            done(null, user);
+        });
+    },
+
     linkedInStrategy: function() {
         if(!process.env.LINKED_IN_KEY)     throw new Error('A LinkedIn App Key is required if you want to enable login via LinkedIn.');
         if(!process.env.LINKED_IN_SECRET) throw new Error('A LinkedIn App Secret is required if you want to enable login via LinkedIn.');
@@ -158,7 +174,7 @@ module.exports = {
           },
            function(token, tokenSecret, profile, done) {
             var user = module.exports.findOrCreateOauthUser('linkedin', profile.id);
-            done(null,user); 
+            done(null,user);
           }
         );
     },
