@@ -44,14 +44,22 @@ angular.module('angular-client-side-auth')
     // Google Plus Sign-in specific listeners
     $scope.$on('event:google-plus-signin-success', function (event,authResult) {
 
+        console.log('signIn OK');
+
         // Send login to server or save into cookie
         $http.post('http://localhost:8000/oauth2callback', { id_token: authResult.idtoken, access_token: authResult.access_token })
-            .success(function () { $location.path('/'); });
+            .success(function () {
+                //console.log(JSON.stringify(arguments,null,2));
+                $window.location.href = '/';
+            });
     });
 
     $scope.$on('event:google-plus-signin-failure', function (event,authResult) {
+
+        console.log('signIn ERROR');
+
         // Auth failure or signout detected
-        $location.path('/login');
+        //$location.path('/login');
     });
 
 }]);
